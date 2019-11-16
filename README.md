@@ -1,7 +1,7 @@
 # DIoU
 Distance-IoU Loss: Faster and Better Learning for Bounding Box Regression (AAAI 2020)
 
-# DC-Darknet
+# DIoU-Darknet
 
 YOLOv3 with DIoU and CIoU losses implemented in Darknet
 
@@ -163,7 +163,7 @@ VOCdevkit
     ├──SegmentationObject
 ```
 
-Now, yourpath/d-darknet-master/ will have several txt file like this:
+Now, yourpath/DIoU-darknet/ will have several txt file like this:
 2007_test.txt, train.txt
 
 Training set contains 16551 images, and validation set contains 4952 images.
