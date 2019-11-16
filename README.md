@@ -145,6 +145,7 @@ python scripts/voc_label.py
 ```
 
 Put them in the following dir
+```
 VOCdevkit
 ├── VOC2007
     ├──Annotations
@@ -160,7 +161,8 @@ VOCdevkit
     ├──labels
     ├──SegmentationClass
     ├──SegmentationObject
-	
+```
+
 Now, yourpath/d-darknet-master/ will have several txt file like this:
 2007_test.txt, train.txt
 
