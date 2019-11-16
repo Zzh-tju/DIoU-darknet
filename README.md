@@ -8,7 +8,7 @@ YOLOv3 with DIoU and CIoU losses implemented in Darknet
 If you use this work, please consider citing:
 
 ```
-@article{Zhaohui_Zheng_2020_AAAI,
+@inproceedings{Zhaohui_Zheng_2020_AAAI,
   author    = {Zhaohui Zheng, Ping Wang, Wei Liu, Jinze Li, Rongguang Ye, Dongwei Ren},
   title     = {Distance-IoU Loss: Faster and Better Learning for Bounding Box Regression},
   booktitle = {The AAAI Conference on Artificial Intelligence (AAAI)},
@@ -53,7 +53,7 @@ nms_kind=greedynms
 ```
 nms_kind=diounms
 ```
-Besides that, we also found that for YOLOv3, we introduce beta1 for DIoU-NMS, that is IoU - R_DIoU ^ {beta1}. With this operation, DIoU-NMS can perform better than default beta1=1.0.
+Besides that, we also found that for YOLOv3, we introduce beta1 for DIoU-NMS, that is DIoU = IoU - R_DIoU ^ {beta1}. With this operation, DIoU-NMS can perform better than default beta1=1.0.
 
 In our constrained search, the following values appear to work well for the DIoU-NMS.
 ```
