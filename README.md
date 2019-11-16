@@ -53,7 +53,7 @@ nms_kind=greedynms
 ```
 nms_kind=diounms
 ```
-Besides that, we also found that for YOLOv3, we introduce beta1 for DIoU-NMS, that is IoU - R_DIoU ^ beta1. With this operation, DIoU-NMS can perform better than default beta1=1.0.
+Besides that, we also found that for YOLOv3, we introduce beta1 for DIoU-NMS, that is IoU - R_DIoU ^ {beta1}. With this operation, DIoU-NMS can perform better than default beta1=1.0.
 
 In our constrained search, the following values appear to work well for the DIoU-NMS.
 ```
