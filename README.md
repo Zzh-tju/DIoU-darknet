@@ -101,11 +101,12 @@ Details on running Darkboard can be found in the [/darkboard/README.md]() file.
 
 See the [Workflow](#workflow) and [Evaluation](#evaluation) sections below for details on how to use these files
 
-|Link|Save as local file|cfg used for training|
+|Link|loss|
 |--|--|--|
-|http://bit.ly/2JZ9uMc|backup/coco-baseline4/yolov3_492000.weights|cfg/runs/coco-baseline4/yolov3.coco-baseline4.cfg|
-|http://bit.ly/2TRNa6V|backup/coco-giou-12/yolov3_final.weights|cfg/runs/coco-giou-12/yolov3.coco-giou-12.cfg|
-
+|https://pan.baidu.com/s/1OmQyEvE8E_tR0Z9FTVvPRg|iou loss|
+|https://pan.baidu.com/s/1Hr6VgCItMLCqEIT07hh-EQ|giou loss|
+|https://pan.baidu.com/s/1QVTXmdRpAnMr4kM5Zvl_3A|diou loss|
+|https://pan.baidu.com/s/158WSZy8QY_SSoF4FBTF26Q|ciou loss|
 ## Workflow
 
 When training the network I used 2 GPUs on one Ubuntu machine.
