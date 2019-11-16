@@ -170,8 +170,6 @@ Training set contains 16551 images, and validation set contains 4952 images.
 
 ## Evaluation
 
-This repository contains tools for running ongoing evaluation while training the network.
-
 ### VOC
 
 Evaluate all weights files in the given `weights_folder` with both the IoU and GIoU metrics using the following script:
