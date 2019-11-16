@@ -85,18 +85,6 @@ see: `scripts/get_2017_coco_dataset.sh`
 
 See `scripts/voc_all_map.py` for VOC evaluation and  `scripts/coco_all_map.py` for COCO evaluation and `scripts/crontab.tmpl` for usage
 
-### sbatch (that we did not use)
-
-At Stanford, we use Slurm to manage the shared resources in our computing clusters
-
-The [batch] directory contains the `sbatch` launch scripts for our cluster. Each script contain the bash commands used to start the network for a given test run.
-
-## Visualization (that we did not use)
-
-We have created a visualization tool, named Darkboard, to plot data generated during training. Though the implementation was quick and dirty, this tool is useful in evaluating network performance.
-
-Details on running Darkboard can be found in the [/darkboard/README.md]() file.
-
 ## Pre-trained Models
 
 See the [Workflow](#workflow) and [Evaluation](#evaluation) sections below for details on how to use these files
