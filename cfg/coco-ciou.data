@@ -1,0 +1,10 @@
+classes= 80
+train  = train.txt
+# for submission
+#valid = datasets/coco/coco/test2014.txt
+# for validation
+valid = val.txt
+names = data/coco.names
+backup = backup/giou
+eval = coco
+
