@@ -101,12 +101,12 @@ Details on running Darkboard can be found in the [/darkboard/README.md]() file.
 
 See the [Workflow](#workflow) and [Evaluation](#evaluation) sections below for details on how to use these files
 
-|Link|loss|
-|--|--|
-|https://pan.baidu.com/s/1OmQyEvE8E_tR0Z9FTVvPRg|iou loss|
-|https://pan.baidu.com/s/1Hr6VgCItMLCqEIT07hh-EQ|giou loss|
-|https://pan.baidu.com/s/1QVTXmdRpAnMr4kM5Zvl_3A|diou loss|
-|https://pan.baidu.com/s/158WSZy8QY_SSoF4FBTF26Q|ciou loss|
+|Link|loss|AP|
+|--|--|--|
+|https://pan.baidu.com/s/1OmQyEvE8E_tR0Z9FTVvPRg|iou loss|46.57|
+|https://pan.baidu.com/s/1Hr6VgCItMLCqEIT07hh-EQ|giou loss|47.73|
+|https://pan.baidu.com/s/1QVTXmdRpAnMr4kM5Zvl_3A|diou loss|48.10|
+|https://pan.baidu.com/s/158WSZy8QY_SSoF4FBTF26Q|ciou loss|49.21|
 ## Workflow
 
 When training the network I used 2 GPUs on one Ubuntu machine. Note that the `cfg/[run name].cfg` file contains parameters that must be changed when changing the number of GPUs used for training.
