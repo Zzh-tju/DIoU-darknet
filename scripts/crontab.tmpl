@@ -1,0 +1,33 @@
+# Expects $APPDIR to be set by a prepend to this file (done in the cron/Dockerfile), if not already set
+
+# Comment out any/all of the below to run validation analysis for the given experiment and re-comment it out when complete
+
+#*/10 * * * * cd $APPDIR && flock -n /tmp/coco-baseline4.lockfile -c 'python scripts/coco_all_map.py --data_file cfg/coco.coco-baseline4.data --cfg_file cfg/yolov3.coco-baseline4.cfg --weights_folder backup/coco-baseline4 --lib_folder lib --gpu_id 0 --min_weight_id 200000' > $APPDIR/batch/out/coco-baseline4.map.out 2>&1
+
+#*/10 * * * * cd $APPDIR && flock -n /tmp/coco-giou-10.lockfile -c 'python scripts/coco_all_map.py --data_file cfg/coco-giou-10.data --cfg_file cfg/yolov3.coco-giou-10.cfg --weights_folder backup/coco-giou-10 --lib_folder lib --gpu_id 0' > $APPDIR/batch/out/coco-giou-10.map.out 2>&1
+
+#*/10 * * * * cd $APPDIR && flock -n /tmp/coco-giou-12.lockfile -c 'python scripts/coco_all_map.py --data_file cfg/coco-giou-12.data --cfg_file cfg/yolov3.coco-giou-12.cfg --weights_folder backup/coco-giou-12 --lib_folder lib --gpu_id 0 --min_weight_id 200000' > $APPDIR/batch/out/coco-giou-12.map.out 2>&1
+
+#*/10 * * * * cd $APPDIR && flock -n /tmp/coco-giou-13.lockfile -c 'python scripts/coco_all_map.py --data_file cfg/coco-giou-13.data --cfg_file cfg/yolov3.coco-giou-13.cfg --weights_folder backup/coco-giou-13 --lib_folder lib --gpu_id 1 --min_weight_id 200000' > $APPDIR/batch/out/coco-giou-13.map.out 2>&1
+
+#*/10 * * * * cd $APPDIR && flock -n /tmp/coco-iou-14.lockfile -c 'python scripts/coco_all_map.py --data_file cfg/coco-iou-14.data --cfg_file cfg/yolov3.coco-iou-14.cfg --weights_folder backup/coco-iou-14 --lib_folder lib --gpu_id 1 --min_weight_id 200000' > $APPDIR/batch/out/coco-iou-14.map.out 2>&1
+
+#*/10 * * * * cd $APPDIR && flock -n /tmp/coco-giou-16.lockfile -c 'python scripts/coco_all_map.py --data_file cfg/coco-giou-16.data --cfg_file cfg/yolov3.coco-giou-16.cfg --weights_folder backup/coco-giou-16 --lib_folder lib --gpu_id 0' > $APPDIR/batch/out/coco-giou-16.map.out 2>&1
+
+#*/10 * * * * cd $APPDIR && flock -n /tmp/coco-giou-17.lockfile -c 'python scripts/coco_all_map.py --data_file cfg/coco-giou-17.data --cfg_file cfg/yolov3.coco-giou-17.cfg --weights_folder backup/coco-giou-17 --lib_folder lib --gpu_id 1' > $APPDIR/batch/out/coco-giou-17.map.out 2>&1
+
+# linear tests
+
+#*/10 * * * * cd $APPDIR && flock -n /tmp/yolov3-voc-lin-3.lockfile -c 'python scripts/voc_all_map.py --data_file cfg/runs/yolov3-voc-lin-3/data --cfg_file cfg/runs/yolov3-voc-lin-3/cfg --weights_folder backup/yolov3-voc-lin-3/ --lib_folder lib' > $APPDIR/batch/out/yolov3-voc-lin-3.map.out 2>&1
+
+#*/10 * * * * cd $APPDIR && flock -n /tmp/yolov3-voc-lin-4.lockfile -c 'python scripts/voc_all_map.py --data_file cfg/runs/yolov3-voc-lin-4/data --cfg_file cfg/runs/yolov3-voc-lin-4/cfg --weights_folder backup/yolov3-voc-lin-4/ --lib_folder lib' > $APPDIR/batch/out/yolov3-voc-lin-4.map.out 2>&1
+
+*/10 * * * * cd $APPDIR && flock -n /tmp/yolov3-voc-lin-11.lockfile -c 'python scripts/voc_all_map.py --data_file cfg/runs/yolov3-voc-lin-11/data --cfg_file cfg/runs/yolov3-voc-lin-11/cfg --weights_folder backup/yolov3-voc-lin-11/ --lib_folder lib --gpu_id 1' > $APPDIR/batch/out/yolov3-voc-lin-11.map.out 2>&1
+
+
+# capri24
+#*/10 * * * * flock -n /tmp/update_charts.lockfile /bin/zsh -l -c 'cd $APPDIR/darkboard; source $HOME/.zshrc; bundle exec rake charts:update > $APPDIR/batch/out/update_charts.out'
+
+#*/10 * * * * cd $APPDIR && flock -n /tmp/yolov3-hsr-mse-1.lockfile -c 'python scripts/voc_all_map.py --data_file cfg/runs/yolov3-hsr-mse-1/data --cfg_file cfg/runs/yolov3-hsr-mse-1/cfg --weights_folder backup/yolov3-hsr-mse-1/ --classes datasets/hsr/hsr.names' > $APPDIR/batch/out/yolov3-hsr-mse-1.map.out 2>&1
+
+#*/10 * * * * cd $APPDIR && flock -n /tmp/to_src.lockfile -c scripts/to_scr.sh > $APPDIR/batch/out/to_scr.out 2>&1
