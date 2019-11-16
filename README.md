@@ -102,7 +102,7 @@ Details on running Darkboard can be found in the [/darkboard/README.md]() file.
 See the [Workflow](#workflow) and [Evaluation](#evaluation) sections below for details on how to use these files
 
 |Link|loss|
-|--|--|--|
+|--|--|
 |https://pan.baidu.com/s/1OmQyEvE8E_tR0Z9FTVvPRg|iou loss|
 |https://pan.baidu.com/s/1Hr6VgCItMLCqEIT07hh-EQ|giou loss|
 |https://pan.baidu.com/s/1QVTXmdRpAnMr4kM5Zvl_3A|diou loss|
