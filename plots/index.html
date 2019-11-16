@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<div class="controls">
+  <label>VOC Epoch:</label>
+  <span id="vocepoch"></span>
+  &nbsp;|&nbsp;
+  <label>COCO Epoch:</label>
+  <span id="cocoepoch"></span>
+  &nbsp;|&nbsp;
+  <label>Batch:</label>
+  <span id="lastbatch"></span>
+  &nbsp;|&nbsp;
+  <span id="lastreload"></span>
+  <span style="position: absolute; right: 10px;">
+    <span id="loss-roundto">
+      <label>Loss Chart Max-Y</label>
+      <input type="number" value="5" style="max-width: 50px;" readonly="true"/>
+    </span>
+    <span id="run-select">
+      <label>Run Label</label>
+      <select>
+        <option></option>
+      </select>
+    </span>
+    <span>
+      <label>Auto-Refresh:</label>
+      <input type="checkbox" id="refresh" checked="true"/>
+    </span>
+  </span>
+</div>
+<svg id="avg" width="500" height="400"></svg>
+<svg id="iou" width="500" height="400"></svg>
+<svg id="cls" width="500" height="400"></svg>
+<svg id="total" width="500" height="400"></svg>
+<svg id="net" width="500" height="400"></svg>
+<svg id="accuracy" width="500" height="400"></svg>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+
+var backup_name = window.location.href.split('?')[1]
+function loadRuns() {
+  $.ajax({
+    type: "GET",
+    url: "/backup",
+    success: function(data){
+      $.each($(data).find('td > a'), function(i, el) {
+        if (el.href[el.href.length-1] == '/') {
+          var name = el.text.split('/')[0];
+          var selected = "";
+          if (name == backup_name) {
+            selected = 'selected';
+          }
+          $('#run-select select').append('<option value="'+name+'" '+selected+'>'+name+'</option>');
+        }
+      });
+      $('#run-select select').change(function(){
+        if ($(this).val() != '') {
+          var url = window.location.href.split('?')[0]
+          window.location.href = url+"?"+$(this).val();
+        }
+      });
+    }
+  });
+}
+
+function Chart(name, desc) {
+  var svg = d3.select("svg#"+name),
+      margin = {top: 20, right: 20, bottom: 30, left: 50},
+      width = +svg.attr("width") - margin.left - margin.right,
+      height = +svg.attr("height") - margin.top - margin.bottom,
+      g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  var x = d3.scaleLinear()
+      .rangeRound([0, width]);
+
+  var y = d3.scaleLinear()
+      .rangeRound([height, 0]);
+
+  var line = d3.line()
+      .x(function(d) { return x(d[0]); })
+      .y(function(d) { return y(d[1]); });
+
+  return {
+    name: name + desc,
+    x: x,
+    y: y,
+    g: g,
+    height: height,
+    line: line,
+  }
+}
+
+function draw(chart, data) {
+  chart.g.append("g")
+      .attr("transform", "translate(0," + chart.height + ")")
+      .call(d3.axisBottom(chart.x))
+    .select(".domain")
+      .remove();
+
+  chart.g.append("g")
+      .call(d3.axisLeft(chart.y))
+    .append("text")
+      .attr("fill", "#000")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", "0.71em")
+      .attr("text-anchor", "end")
+      .text(chart.name);
+
+  chart.g.append("path")
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round")
+      .attr("stroke-width", 1.5)
+      .attr("d", chart.line);
+};
+
+function build(backup_name) {
+  iouavg = Chart('avg', ' iou');
+  lossiou = Chart('iou', ' loss');
+  losscls = Chart('cls', ' loss');
+  losstot = Chart('total', ' loss');
+  netcost = Chart('net', ' cost');
+  accuracy = Chart('accuracy', ' iou');
+
+  d3.text("/backup/"+backup_name+"/log.csv", function(text) {
+    var losses = {
+      avg: [],
+      iou: [],
+      classification: [],
+      total: []
+    };
+    var iou_avg = [];
+    var avg_net_cost = [];
+    var last_batch = 0;
+    var max_batch = 0;
+    var data = d3.csvParseRows(text).map(function(row) {
+      var iou_avg_sum = 0;
+      var avg_losses = {
+        avg: 0,
+        iou: 0,
+        classification: 0,
+        total: 0
+      };
+      var counts = {
+        iou_avg: 0,
+        avg: 0,
+        iou: 0,
+        cls: 0,
+        tot: 0,
+      }
+      var batch_i = row.indexOf('BATCH');
+      if (batch_i < 0) {
+        console.warn("'BATCH' not found in row");
+        return {};
+      }
+      //var db = [];
+      // remove ious from row
+      ious = row.splice(0, batch_i+1);
+      // remove 'BATCH' element
+      ious = ious.splice(0, batch_i);
+      ious.forEach(function(value) {
+        if (value.charAt(0) == 'A') {
+          //db.push([value, parseFloat(value.substring(1))]);
+          iou_avg_sum += parseFloat(value.substring(1));
+          counts.iou_avg += 1;
+        } else if (value.charAt(0) == 'I') {
+          avg_losses.iou += parseFloat(value.substring(1));
+          counts.iou += 1;
+        } else if (value.charAt(0) == 'C') {
+          avg_losses.classification += parseFloat(value.substring(1));
+          counts.cls += 1;
+        } else if (value.charAt(0) == 'T') {
+          avg_losses.total += parseFloat(value.substring(1));
+          counts.tot += 1;
+        } else {
+          var a = parseFloat(value);
+          if (!isNaN(a)) {
+            avg_losses.avg += a;
+            counts.avg += 1;
+          }
+        }
+      });
+      // convert to numeric type
+      row = row.map(function(value) {
+        var f = parseFloat(value);
+        if (isNaN(f)) {
+          return 1;
+        }
+        return f;
+      });
+      res = {
+        batch: row[0],
+        avg_iou: iou_avg_sum/counts.iou_avg,
+        avg_net_cost: row[2],
+        losses: {
+          avg: avg_losses.avg/counts.avg,
+          iou: avg_losses.iou/counts.iou,
+          classification: avg_losses.classification/counts.cls,
+          total: avg_losses.total/counts.tot,
+        }
+      };
+      last_batch = Math.max(last_batch, res.batch);
+      max_batch = Math.max(max_batch, row[1]);
+      // trim the chart to 0-1 range
+      losses.avg.push([res.batch, Math.min($('#loss-roundto input').val(), res.losses.avg)]);
+      losses.iou.push([res.batch, Math.min($('#loss-roundto input').val(), res.losses.iou)]);
+      losses.classification.push([res.batch, Math.min($('#loss-roundto input').val(), res.losses.classification)]);
+      losses.total.push([res.batch, Math.min($('#loss-roundto input').val(), res.losses.total)]);
+      //if (res.avg_iou > 1) {
+      //  debugger;
+      //}
+      iou_avg.push([res.batch, res.avg_iou]);
+      avg_net_cost.push([res.batch, res.avg_net_cost]);
+      return res;
+    });
+
+    // (batch * subdivisions) / gpus
+    var images_per_batch = (64 * 16) / 4;
+    var voc_count = 16551;
+    var coco_count = 117264;
+    var per_complete = last_batch / max_batch;
+    $('#lastbatch').text(Math.round(100*per_complete)+'%, ' + last_batch + '/' + max_batch);
+    $('#vocepoch').text(Math.round((last_batch * images_per_batch) / voc_count));
+    $('#cocoepoch').text(Math.round((last_batch * images_per_batch) / coco_count));
+    var xmax = max_batch;
+    if (per_complete < 0.95) {
+      xmax = max_batch * per_complete * 1.05;
+    }
+
+    // Really accuracy
+    if (losses.avg.length) {
+      accuracy.x.domain([0, xmax]);
+      accuracy.y.domain(d3.extent(losses.avg, function(d) { return d[1]; }));
+      draw(accuracy, losses.avg);
+    }
+
+    iouavg.x.domain([0, xmax]);
+    iouavg.y.domain(d3.extent(iou_avg, function(d) { return d[1]; }));
+    draw(iouavg, iou_avg);
+
+    lossiou.x.domain([0, xmax]);
+    lossiou.y.domain(d3.extent(losses.iou, function(d) { return d[1]; }));
+    draw(lossiou, losses.iou);
+
+    losscls.x.domain([0, xmax]);
+    losscls.y.domain(d3.extent(losses.classification, function(d) { return d[1]; }));
+    draw(losscls, losses.classification);
+
+    losstot.x.domain([0, xmax]);
+    losstot.y.domain(d3.extent(losses.total, function(d) { return d[1]; }));
+    draw(losstot, losses.total);
+
+    netcost.x.domain([0, xmax]);
+    netcost.y.domain(d3.extent(avg_net_cost, function(d) { return d[1]; }));
+    draw(netcost, avg_net_cost);
+  });
+
+  $('#lastreload').text(new Date());
+  setInterval(function () {
+    if ($('#refresh').is(":checked")) {
+      location.reload();
+    }
+  }, 10 * 1000);
+}
+
+if (backup_name) {
+  build(backup_name);
+}
+loadRuns();
+
+</script>

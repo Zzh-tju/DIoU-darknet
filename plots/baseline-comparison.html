@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<div class="controls">
+  <label></label>
+</div>
+<svg id="accuracy" width="500" height="400"></svg>
+<svg id="mse" width="500" height="400"></svg>
+<svg id="iou" width="500" height="400"></svg>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+
+function Chart(name, desc) {
+  var svg = d3.select("svg#"+name),
+      margin = {top: 20, right: 20, bottom: 30, left: 50},
+      width = +svg.attr("width") - margin.left - margin.right,
+      height = +svg.attr("height") - margin.top - margin.bottom,
+      g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  var x = d3.scaleLinear()
+      .rangeRound([0, width]);
+
+  var y = d3.scaleLinear()
+      .rangeRound([height, 0]);
+
+  var line = d3.line()
+      .x(function(d) { return x(d[0]); })
+      .y(function(d) { return y(d[1]); });
+
+  return {
+    name: name + desc,
+    x: x,
+    y: y,
+    g: g,
+    height: height,
+    line: line,
+  }
+}
+
+function draw(chart, data, color) {
+  if (!color) {
+    color = "steelblue";
+  }
+  chart.g.append("g")
+      .attr("transform", "translate(0," + chart.height + ")")
+      .call(d3.axisBottom(chart.x))
+    .select(".domain")
+      .remove();
+
+  chart.g.append("path")
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", color)
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round")
+      .attr("stroke-width", 1.5)
+      .attr("d", chart.line);
+
+  chart.g.append("g")
+      .call(d3.axisLeft(chart.y))
+    .append("text")
+      .attr("fill", "#000")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", "0.71em")
+      .attr("text-anchor", "end")
+      .text(chart.name);
+
+};
+
+function parseRow(row, key, results) {
+  var maxY = 2.5;
+  var batch_i = row.indexOf('BATCH');
+  if (batch_i < 0) {
+    return;
+  }
+  var iou_avg_sum = 0;
+  var avg_losses = {
+    avg: 0,
+    iou: 0,
+    classification: 0,
+    total: 0
+  };
+  var counts = {
+    iou_avg: 0,
+    avg: 0,
+    iou: 0,
+    cls: 0,
+    tot: 0,
+  }
+  //var db = [];
+  // remove ious from row
+  ious = row.splice(0, batch_i+1);
+  // remove 'BATCH' element
+  ious = ious.splice(0, batch_i);
+  ious.forEach(function(value) {
+    if (value.charAt(0) == 'A') {
+      //db.push([value, parseFloat(value.substring(1))]);
+      iou_avg_sum += parseFloat(value.substring(1));
+      counts.iou_avg += 1;
+    } else if (value.charAt(0) == 'I') {
+      avg_losses.iou += parseFloat(value.substring(1));
+      counts.iou += 1;
+    //} else if (value.charAt(0) == 'C') {
+    //  avg_losses.classification += parseFloat(value.substring(1));
+    //  counts.cls += 1;
+    } else if (value.charAt(0) == 'T') {
+      avg_losses.total += parseFloat(value.substring(1));
+      counts.tot += 1;
+    } else {
+      var a = parseFloat(value);
+      if (!isNaN(a)) {
+        avg_losses.avg += a;
+        counts.avg += 1;
+      }
+    }
+  });
+  // convert to numeric type
+  row = row.map(function(value) {
+    var f = parseFloat(value);
+    if (isNaN(f)) {
+      return 1;
+    }
+    return f;
+  });
+  res = {
+    batch: row[0],
+    avg_iou: iou_avg_sum/counts.iou_avg,
+    avg_net_cost: row[2],
+    losses: {
+      avg: avg_losses.avg/counts.avg,
+      iou: avg_losses.iou/counts.iou,
+      classification: avg_losses.classification/counts.cls,
+      total: avg_losses.total/counts.tot,
+    }
+  };
+  if (res.batch > results.xmax) {
+    results.xmax = res.batch;
+  }
+  // trim the chart to 0-1 range
+  results.accuracy[key].push([res.batch, Math.min(isNaN(res.avg_iou) ? res.losses.avg : res.avg_iou, maxY)]);
+  results.loss[key].push([res.batch, Math.min(res.avg_net_cost, maxY)]);
+};
+
+/*
+ * expects array of [[x, y], ...] value pairs
+ */
+function moving_avg(tuples, range, max_x) {
+  var res = [], i = 0;
+  tuples.forEach(function(tuple) {
+    if (i++ < range || tuple[0] > max_x) { return; }
+    var avg = tuples.slice(i-range, i).map((x) => x[1]).reduce(((a,v) => a+v), 0)/range;
+    res.push([tuple[0], avg]);
+  });
+  return res;
+}
+
+function build() {
+  accuracy = Chart('accuracy', ' iou(gold)/mse(blue)');
+  lossiou = Chart('iou', ' loss');
+  lossmse = Chart('mse', ' loss');
+
+  var results = {
+    xmax: 0,
+    accuracy: {mse: [], iou: []},
+    loss: {mse: [], iou: []},
+  }
+  // mse
+  d3.text("/backup/yolov3-5000x-7/log.csv", function(text) {
+    var data = d3.csvParseRows(text).map(function(row) {
+      parseRow(row, 'iou', results);
+    });
+    d3.text("/backup/yolov3-baseline/log.csv", function(text) {
+      var data = d3.csvParseRows(text).map(function(row) {
+        parseRow(row, 'mse', results);
+      });
+
+      // if moving avg?
+      var maxX = 50200
+      var smoothed = true, mwindow = 250;
+      var accuracy_mse = smoothed ? moving_avg(results.accuracy.mse, mwindow, maxX) : results.accuracy.mse;
+      var accuracy_iou = smoothed ? moving_avg(results.accuracy.iou, mwindow, maxX) : results.accuracy.iou;
+      var loss_mse = smoothed ? moving_avg(results.loss.mse, mwindow, maxX) : results.loss.mse;
+      var loss_iou = smoothed ? moving_avg(results.loss.iou, mwindow, maxX) : results.loss.iou;
+
+      accuracy.x.domain([0, maxX]);
+      accuracy.y.domain(d3.extent(results.accuracy.mse.concat(results.accuracy.iou), function(d) { return d[1]; }));
+      draw(accuracy, accuracy_mse, "steelblue");
+      draw(accuracy, accuracy_iou, "gold");
+
+      lossiou.x.domain([0, maxX]);
+      lossiou.y.domain(d3.extent(loss_iou, function(d) { return d[1]; }));
+      draw(lossiou, loss_iou);
+
+      lossmse.x.domain([0, maxX]);
+      lossmse.y.domain(d3.extent(loss_mse, function(d) { return d[1]; }));
+      draw(lossmse, loss_mse);
+    });
+  });
+}
+build();
+</script>
