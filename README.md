@@ -109,20 +109,7 @@ See the [Workflow](#workflow) and [Evaluation](#evaluation) sections below for d
 |https://pan.baidu.com/s/158WSZy8QY_SSoF4FBTF26Q|ciou loss|
 ## Workflow
 
-When training the network I used 2 GPUs on one Ubuntu machine.
-
-To make running on various machines easier, I use the `scripts/package_libs.sh` script to pull all dependencies of darknet and place them in a single folder (`lib`).
-
-For each test run I create the following new files:
-
-|file name|purpose|
-|---|---|
-|cfg/[run name].data|data sources for train and validation data as well as the run prefix setting (which, by convention I always to [run name])|
-|cfg/[run name].cfg|network configuration including loss, normalizers and representation|
-
-
-Note that the `cfg/[run name].cfg` file contains parameters that must be changed when changing the number of GPUs used for training.
-
+When training the network I used 2 GPUs on one Ubuntu machine. Note that the `cfg/[run name].cfg` file contains parameters that must be changed when changing the number of GPUs used for training.
 
 ```
 ./darknet detector train cfg/voc-diou.data cfg/voc-diou.cfg darknet53.conv.74 -gpus 0,1
@@ -145,7 +132,7 @@ And for four GPUs, the relevant portion of the `.cfg` file would be:
     learning_rate=0.00025
     burn_in=4000
 
-Then, resume the run from a specific iteration's weight file or in the case below, the backup, passing in the GPUs to run with using:
+If you want to resume the run from a specific iteration's weight file or in the case below, the backup, passing in the GPUs to run with using:
 
 ```
 ./darknet detector train cfg/voc-diou.data cfg/voc-diou.cfg backup/yourpath/voc-diou_30000.weights -gpus 0,1
