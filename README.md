@@ -1,5 +1,6 @@
 # DIoU
 Distance-IoU Loss: Faster and Better Learning for Bounding Box Regression (AAAI 2020)
+
 [[arxiv](https://arxiv.org/abs/1911.08287)] [[pdf](https://arxiv.org/pdf/1911.08287.pdf)]
 
 # DIoU-Darknet
