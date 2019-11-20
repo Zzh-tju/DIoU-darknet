@@ -1,8 +1,8 @@
-## Distance-IoU Loss: Faster and Better Learning for Bounding Box Regression (AAAI 2020)
+# Distance-IoU Loss: Faster and Better Learning for Bounding Box Regression 
 
 [[arxiv](https://arxiv.org/abs/1911.08287)] [[pdf](https://arxiv.org/pdf/1911.08287.pdf)]
 
-# DIoU-Darknet
+## DIoU-Darknet
 
 YOLOv3 with DIoU and CIoU losses implemented in Darknet
 
