@@ -9,12 +9,11 @@ YOLOv3 with DIoU and CIoU losses implemented in Darknet
 If you use this work, please consider citing:
 
 ```
-@inproceedings{Zhaohui_Zheng_2020_AAAI,
+@inproceedings{zheng2020distance,
   author    = {Zhaohui Zheng, Ping Wang, Wei Liu, Jinze Li, Rongguang Ye, Dongwei Ren},
   title     = {Distance-IoU Loss: Faster and Better Learning for Bounding Box Regression},
   booktitle = {The AAAI Conference on Artificial Intelligence (AAAI)},
-  month     = {February},
-  year      = {2020},
+   year      = {2020},
 }
 ```
 
