@@ -2,6 +2,8 @@
 
 [[arxiv](https://arxiv.org/abs/1911.08287)] [[pdf](https://arxiv.org/pdf/1911.08287.pdf)]
 
+Distance-IoU Loss into other STOA detection methods can be found [here](https://github.com/Zzh-tju/DIoU). 
+
 ## DIoU-Darknet
 
 YOLOv3 with DIoU and CIoU losses implemented in Darknet
