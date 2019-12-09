@@ -1,4 +1,4 @@
-## Distance-IoU Loss into other STOA detection methods can be found [here](https://github.com/Zzh-tju/DIoU). 
+## Distance-IoU Loss into other SOTA detection methods can be found [here](https://github.com/Zzh-tju/DIoU). 
 
 [[arxiv](https://arxiv.org/abs/1911.08287)] [[pdf](https://arxiv.org/pdf/1911.08287.pdf)]
 
