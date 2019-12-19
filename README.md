@@ -189,10 +189,45 @@ Then for validation, I mainly use three files: compute_mAP.py, voc_eval.py, map.
 
 You can put the three in the same directory.
 
-After that I use compute_mAP.py to compute mAP. This will create 10 txt files, each of them contains mAP for 20 classes. You can open voc_eval.py to modify the path at the end of the file. (See ☆☆☆☆☆)
+Firstly,
+```
+python compute_mAP.py
+```
+This will create 10 txt files, each of them contains mAP for 20 classes. 
+<img src="eval.jpg" width="600px"/>
 
-Finally, open map.py. to modify to your path. And run map.py. This will print the AP in the terminal and calculate the mAP for different threshhold, e.g, AP50, AP75.
+You can open voc_eval.py to modify the path at the end of the file. (See ☆☆☆☆☆ )
+
+Secondly, open `map.py` to modify to your path.
+```
+python map.py
+```
+This will print the AP in the terminal and calculate the mAP for different threshhold, e.g, AP50, AP75.
 AP50, AP55, ..., AP95 will appear at the last line of 10 txt files generated above.
+```
+aeroplane 	0.859953927601302
+bicycle 	0.8570948725214653
+bird 		0.7815241730933422
+boat 		0.6885571683084716
+bottle 		0.6878002434239279
+bus 		0.8774114526435925
+car 		0.9124346504544593
+cat 		0.8962038854301146
+chair 		0.6142762879219088
+cow 		0.8346408862658632
+diningtable 	0.7162604144581127
+dog 		0.8688758188651542
+horse 		0.8948186206841635
+motorbike 	0.8704952288269674
+person 		0.8628876984931069
+pottedplant 	0.500699583013652
+sheep 		0.8041337922413851
+sofa 		0.7793190004011306
+train 		0.8627512497332716
+tvmonitor 	0.7799964431935789
+
+0.797507
+```
 
 ### COCO
 
