@@ -1,5 +1,5 @@
 import os
-path = "/home/yourpath/DIoU-Darknet/"     #Put all the mAP files (AP50, AP55,..., AP95) in this folder
+path = "/home/yourpath/evaluation/"     #Put all the mAP files (AP50, AP55,..., AP95) in this folder
 mAPlist = []
 for txt in os.listdir(path):
     content = open(path+ '/' + txt, 'r')
