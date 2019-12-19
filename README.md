@@ -183,7 +183,8 @@ When you finish the training, you can validate it:
 ```
 ./darknet detector valid voc-diou.data voc-diou.cfg backup/your_weight_path/your_weight.weights
 ```
-There will be 20 txt files generated in results/.
+There will be 20 txt files generated in /yourpath/DIoU-Darknet/results/.
+<img src="eval/class_results.png" width="600px"/>
 
 Then for validation, I mainly use three files: compute_mAP.py, voc_eval.py, map.py
 
