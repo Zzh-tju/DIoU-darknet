@@ -194,9 +194,7 @@ Firstly,
 python eval/compute_mAP.py
 ```
 This will create 10 txt files, each of them contains mAP for 20 classes. 
-
 <img src="eval/eval.jpg" width="600px"/>
-
 You can open eval/voc_eval.py to modify the path at the end of the file. (See ☆☆☆☆☆ )
 
 Secondly, open `eval/map.py` to modify to your path.
