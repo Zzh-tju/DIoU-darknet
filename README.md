@@ -191,16 +191,17 @@ You can put the three in the same directory.
 
 Firstly,
 ```
-python compute_mAP.py
+python eval/compute_mAP.py
 ```
 This will create 10 txt files, each of them contains mAP for 20 classes. 
-<img src="eval.jpg" width="600px"/>
 
-You can open voc_eval.py to modify the path at the end of the file. (See ☆☆☆☆☆ )
+<img src="eval/eval.jpg" width="800px"/>
 
-Secondly, open `map.py` to modify to your path.
+You can open eval/voc_eval.py to modify the path at the end of the file. (See ☆☆☆☆☆ )
+
+Secondly, open `eval/map.py` to modify to your path.
 ```
-python map.py
+python eval/map.py
 ```
 This will print the AP in the terminal and calculate the mAP for different threshhold, e.g, AP50, AP75.
 AP50, AP55, ..., AP95 will appear at the last line of 10 txt files generated above.
