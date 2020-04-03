@@ -170,6 +170,22 @@ Now, yourpath/DIoU-darknet/ will have several txt file like this:
 
 Training set contains 16551 images, and validation set contains 4952 images.
 
+## Training YOLO on COCO
+
+To train YOLO you will need all of the COCO data and labels. The script scripts/get_coco_dataset.sh will do this for you.
+```
+cp scripts/get_coco_dataset.sh data
+cd data
+bash get_coco_dataset.sh
+python scripts/coco_label.py
+```
+
+Train The Model
+Now we can train! Run the command:
+```
+./darknet detector train cfg/coco-ciou.data cfg/coco-ciou.cfg darknet53.conv.74 -gpus 0,1,2,3
+```
+
 ## Evaluation
 
 ### VOC
