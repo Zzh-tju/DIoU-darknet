@@ -1,23 +1,33 @@
-## Distance-IoU Loss into other SOTA detection methods can be found [here](https://github.com/Zzh-tju/DIoU). 
+<img src="CIoU.png" width="800px"/>
 
-[[arxiv](https://arxiv.org/abs/1911.08287)] [[pdf](https://arxiv.org/pdf/1911.08287.pdf)]
+## Complete-IoU Loss and Cluster-NMS for improving Object Detection and Instance Segmentation. 
+#### New released! https://github.com/Zzh-tju/CIoU
 
-
-
-## DIoU-Darknet
-
-YOLOv3 with DIoU and CIoU losses implemented in Darknet
-
-If you use this work, please consider citing:
+This is the code for our papers:
+ - [Distance-IoU Loss: Faster and Better Learning for Bounding Box Regression](https://arxiv.org/abs/1911.08287)
+ - [Enhancing Geometric Factors into Model Learning and Inference for Object Detection and Instance Segmentation](https://arxiv.org/abs/2005.03572)
 
 ```
-@inproceedings{zheng2020distance,
+@Inproceedings{zheng2020distance,
   author    = {Zhaohui Zheng, Ping Wang, Wei Liu, Jinze Li, Rongguang Ye, Dongwei Ren},
   title     = {Distance-IoU Loss: Faster and Better Learning for Bounding Box Regression},
   booktitle = {The AAAI Conference on Artificial Intelligence (AAAI)},
    year      = {2020},
 }
+
+@Article{zheng2020ciou,
+  author= {Zhaohui Zheng, Ping Wang, Dongwei Ren, Wei Liu, Rongguang Ye, Qinghua Hu, Wangmeng Zuo},
+  title={Enhancing Geometric Factors in Model Learning and Inference for Object Detection and Instance Segmentation},
+  journal={arXiv:2005.03572},
+  year={2020}
+}
 ```
+
+## Distance-IoU Loss into other SOTA detection methods can be found [here](https://github.com/Zzh-tju/DIoU). 
+
+## DIoU-Darknet
+
+YOLOv3 with DIoU and CIoU losses implemented in Darknet
 
 ## Modifications in this repository
 
